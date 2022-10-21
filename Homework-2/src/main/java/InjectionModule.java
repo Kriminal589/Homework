@@ -1,22 +1,21 @@
 import com.google.inject.AbstractModule;
-
-import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 
 public class InjectionModule extends AbstractModule {
-    private final String type;
-    InjectionModule(String type) {
+    private final String[] type;
+    InjectionModule(@NotNull String[] type) {
         this.type = type;
     }
 
     @Override
     protected void configure() {
-        if (Objects.equals(type, "File")) {
-            bind(BaseClass.class).to(LoggerToFile.class);
-        } else if (Objects.equals(type, "Console")) {
+        if (type[0].equals("File")) {
+            bind(BaseClass.class).toInstance(new LoggerToFile(type[1]));
+        } else if (type[0].equals("Console")) {
             bind(BaseClass.class).to(LoggerToConsole.class);
         } else {
-            bind(BaseClass.class).to(LoggerComposite.class);
+            bind(BaseClass.class).toInstance(new LoggerComposite(type[1]));
         }
     }
 }
