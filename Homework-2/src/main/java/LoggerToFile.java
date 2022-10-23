@@ -5,28 +5,24 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Scanner;
 
-public final class LoggerToFile implements BaseClass {
+public final class LoggerToFile extends Application {
     private final String tag;
 
     public LoggerToFile(@NotNull String tag) {
         this.tag = tag;
     }
-    @Override
-    public void waitForInput() {
-        int N = 0;
 
-        try (Scanner scanner = new Scanner(System.in);
-             FileWriter writer = new FileWriter(
-                Objects.requireNonNull(Main.class.getResource("logs.txt")).getFile(), false)
-        ) {
-            System.out.println("Log to File. Waiting for new lines. Key in 'q' to exit.");
+    @Override
+    void log(Scanner scanner) {
+        try (FileWriter writer = new FileWriter("logs.txt", false)) {
+            System.out.println("File log. Waiting for new lines. Key in 'q' to exit.");
             while (true) {
                 String line = scanner.nextLine();
                 if (line.equals("q")) {
                     break;
                 }
 
-                writer.write(tag + line + " " + ++N + tag);
+                writer.write(tag + line + " " + (++N) + tag);
                 writer.append('\n');
             }
             writer.flush();

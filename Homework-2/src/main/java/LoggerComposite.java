@@ -1,34 +1,35 @@
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class LoggerComposite implements BaseClass {
+public class LoggerComposite extends Application {
     private final String tag;
-    private int N = 0;
 
     public LoggerComposite(String tag) {
         this.tag = tag;
     }
 
     @Override
-    public void waitForInput() {
-        Logger logger = Logger.getLogger(LoggerComposite.class.getName());
-        System.out.println("Composite logger. Waiting for new lines. Key in 'q' to exit.");
-        try (Scanner scanner = new Scanner(System.in);
-             FileWriter writer = new FileWriter(
-                     Objects.requireNonNull(Main.class.getResource("logs.txt")).getFile(), false)
-        ) {
+    void log(Scanner scanner) {
+        try (FileWriter writer = new FileWriter("logs.txt", false);
+             FileInputStream config = new FileInputStream(
+                     Objects.requireNonNull(Main.class.getResource("consoleLogger.config")).getFile())) {
+            System.out.println("Composite log. Waiting for new lines. Key in 'q' to exit.");
+            LogManager.getLogManager().readConfiguration(config);
+            logger = Logger.getLogger(Main.class.getName());
             while (true) {
                 String line = scanner.nextLine();
                 if (line.equals("q")) {
                     break;
                 }
 
-                writer.write(tag + line + " " + (++N + 1) + tag);
+                logger.info(tag + line + " " + (++N) + tag);
+                writer.write(tag + line + " " + (N + 1) + tag);
                 writer.append('\n');
-                logger.info(line + " " + N);
             }
             writer.flush();
         } catch (IOException e) {

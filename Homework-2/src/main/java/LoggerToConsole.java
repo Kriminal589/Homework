@@ -1,28 +1,29 @@
-import java.util.NoSuchElementException;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class LoggerToConsole implements BaseClass {
-    int N = 0;
-
+public class LoggerToConsole extends Application {
     @Override
-    public void waitForInput() {
-        Logger logger = Logger.getLogger(LoggerToConsole.class.getName());
-
-        try (Scanner scanner = new Scanner(System.in)) {
+    void log(Scanner scanner) {
+        try(FileInputStream config = new FileInputStream(
+                Objects.requireNonNull(Main.class.getResource("consoleLogger.config")).getFile())) {
             System.out.println("Console log. Waiting for new lines. Key in 'q' to exit.");
-            while (true) {
-                String line = scanner.nextLine();
-
-                if (Objects.equals(line, "q")) {
-                    break;
-                }
-                N++;
-                logger.info(line + " " + N);
-            }
-        } catch (IllegalStateException | NoSuchElementException e) {
+            LogManager.getLogManager().readConfiguration(config);
+            logger = Logger.getLogger(Main.class.getName());
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        while (true) {
+            String line = scanner.nextLine();
+            if (line.equals("q")) {
+                break;
+            }
+
+            logger.info(line + " " + (++N));
         }
     }
 }

@@ -10,12 +10,12 @@ public class InjectionModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        if (type[0].equals("File")) {
-            bind(BaseClass.class).toInstance(new LoggerToFile(type[1]));
-        } else if (type[0].equals("Console")) {
-            bind(BaseClass.class).to(LoggerToConsole.class);
+        if ("File".equals(type[0])) {
+            bind(Application.class).toInstance(new LoggerToFile(type[1]));
+        } else if ("Console".equals(type[0])) {
+            bind(Application.class).to(LoggerToConsole.class);
         } else {
-            bind(BaseClass.class).toInstance(new LoggerComposite(type[1]));
+            bind(Application.class).toInstance(new LoggerComposite(type[1]));
         }
     }
 }
