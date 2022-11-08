@@ -22,7 +22,7 @@ public class Library implements FactoryLibrary {
     @Override
     public void find(Author author) {
         for (Book book : books){
-            if (Objects.equals(book.author().getName(), author.getName())){
+            if (Objects.equals(book.author().name(), author.name())){
                 Gson gson = new GsonBuilder()
                         .setPrettyPrinting()
                         .create();
