@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Application {
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         FactoryLibrary library = new Library(new BufferedReader(
                 new FileReader(
